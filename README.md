@@ -59,5 +59,7 @@ g++ -std=c++17 -I include `
 
 ## Desenvolvedora
 Sophia Sales
+
 IFPB – Engenharia de Computação
+
 GitHub: https://github.com/Sophia7b
