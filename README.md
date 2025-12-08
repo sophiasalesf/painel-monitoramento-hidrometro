@@ -3,7 +3,7 @@
 Sistema em C++ que implementa o padrão de projeto Facade para gerenciar usuários, contas de consumo de água e hidrômetros. O projeto organiza o código em camadas (Fachada → Serviço → Entidades), demonstrando como simplificar o acesso a subsistemas complexos por meio de uma interface unificada.
 
 ## Evolução atual do projeto 
-
+▰▰▰▱▱▱▱▱▱▱ 25%
 
 ## Padrões de projeto implementados
 | Padrão        | Onde ver no código                                                                 |
