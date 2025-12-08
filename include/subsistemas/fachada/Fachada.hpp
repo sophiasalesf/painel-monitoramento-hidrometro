@@ -2,13 +2,13 @@
 #define FACHADA_HPP
 
 #include "../usuarios/UsuarioService.hpp"
+#include "../monitoramento/ProcessadorOCR.hpp"
+#include "../monitoramento/ProcessadorSegmentacao.hpp"
+
 #include <string>
 #include <memory>
 
 class Fachada {
-private:
-    UsuarioService usuarioService;
-
 public:
     // Construtor
     Fachada();
@@ -29,8 +29,15 @@ public:
     Hidrometro* obterHidrometro(const std::string& numeroHidrometro);
     std::vector<Hidrometro> listarHidrometrosPorConta(const std::string& numeroConta);
 
+    // INTERFACE SIMPLIFICADA PARA MONITORAMENTO DE IMAGENS
+    double processarImagemOCR(const std::string& caminhoImagem);
+    double processarImagemSegmentacao(const std::string& caminhoImagem);
+
     // TESTES 
     void testar();
+
+private:
+    UsuarioService usuarioService;
 };
 
 #endif

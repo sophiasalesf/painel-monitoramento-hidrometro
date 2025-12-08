@@ -57,7 +57,7 @@ std::vector<Hidrometro> Fachada::listarHidrometrosPorConta(const std::string& nu
 
 // TESTES
 void Fachada::testar() {
-    std::cout << "PRIMEIRO TESTE DA FACHADA\n" << std::endl;
+    std::cout << "\nPRIMEIRO TESTE DA FACHADA\n" << std::endl;
 
     // 1. Criar usuários
     std::cout << "[1] Criando usuarios..." << std::endl;
@@ -87,5 +87,25 @@ void Fachada::testar() {
     std::cout << "\n[6] Atualizando usuario..." << std::endl;
     atualizarUsuario("12345678900", "sophia.novo@email.com");
 
-    std::cout << "\nFIM DO TESTE" << std::endl;
+    std::cout << "\nFIM DO TESTE\n" << std::endl;
+}
+
+double Fachada::processarImagemOCR(const std::string& caminhoImagem) {
+    std::cout << "[FACHADA] Processando imagem com OCR: " 
+              << caminhoImagem << std::endl;
+    ProcessadorOCR processador(caminhoImagem);
+    double valor = processador.processar();
+    std::cout << "[FACHADA] Valor obtido (OCR): " 
+              << valor << " m^3" << std::endl;
+    return valor;
+}
+
+double Fachada::processarImagemSegmentacao(const std::string& caminhoImagem) {
+    std::cout << "[FACHADA] Processando imagem com Segmentacao: " 
+              << caminhoImagem << std::endl;
+    ProcessadorSegmentacao processador(caminhoImagem);
+    double valor = processador.processar();
+    std::cout << "[FACHADA] Valor obtido (Segmentacao): " 
+              << valor << " m^3" << std::endl;
+    return valor;
 }
