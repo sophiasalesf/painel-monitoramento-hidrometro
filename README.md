@@ -55,7 +55,7 @@ g++ -std=c++17 -I include `
 `.\painel.exe`
 
 ## Exemplo de saída no terminal
-![alt text](image.png)
+<img width="643" height="410" alt="image" src="https://github.com/user-attachments/assets/3974825e-9884-4942-a112-9167538f0862" />
 
 ## Desenvolvedora
 Sophia Sales
