@@ -1,0 +1,91 @@
+#include "../../../include/subsistemas/fachada/Fachada.hpp"
+#include <iostream>
+#include <iomanip>
+
+// Construtor
+Fachada::Fachada() {
+    std::cout << "[FACHADA] Sistema inicializado com sucesso!" << std::endl;
+}
+
+// INTERFACE SIMPLIFICADA PARA USUÁRIOS 
+
+bool Fachada::criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email) {
+    std::cout << "[FACHADA] ";
+    return usuarioService.criarUsuario(cpf, nome, email);
+}
+
+Usuario* Fachada::obterUsuario(const std::string& cpf) {
+    return usuarioService.obterUsuario(cpf);
+}
+
+bool Fachada::atualizarUsuario(const std::string& cpf, const std::string& email) {
+    std::cout << "[FACHADA] ";
+    return usuarioService.atualizarUsuario(cpf, email);
+}
+
+std::vector<Usuario> Fachada::listarUsuarios() {
+    return usuarioService.listarUsuarios();
+}
+
+// INTERFACE SIMPLIFICADA PARA CONTAS 
+bool Fachada::criarConta(const std::string& numeroConta, const std::string& cpfTitular, const std::string& endereco) {
+    std::cout << "[FACHADA] ";
+    return usuarioService.criarConta(numeroConta, cpfTitular, endereco);
+}
+
+Conta* Fachada::obterConta(const std::string& numeroConta) {
+    return usuarioService.obterConta(numeroConta);
+}
+
+std::vector<Conta> Fachada::listarContasPorUsuario(const std::string& cpfTitular) {
+    return usuarioService.listarContasPorUsuario(cpfTitular);
+}
+
+// INTERFACE SIMPLIFICADA PARA HIDRÔMETROS 
+bool Fachada::criarHidrometro(const std::string& numeroHidrometro, const std::string& numeroConta) {
+    std::cout << "[FACHADA] ";
+    return usuarioService.criarHidrometro(numeroHidrometro, numeroConta);
+}
+
+Hidrometro* Fachada::obterHidrometro(const std::string& numeroHidrometro) {
+    return usuarioService.obterHidrometro(numeroHidrometro);
+}
+
+std::vector<Hidrometro> Fachada::listarHidrometrosPorConta(const std::string& numeroConta) {
+    return usuarioService.listarHidrometrosPorConta(numeroConta);
+}
+
+// TESTES
+void Fachada::testar() {
+    std::cout << "PRIMEIRO TESTE DA FACHADA\n" << std::endl;
+
+    // 1. Criar usuários
+    std::cout << "[1] Criando usuarios..." << std::endl;
+    criarUsuario("12345678900", "Sophia Sales", "sophia@email.com");
+    criarUsuario("98765432100", "Arley Pereira", "arley@email.com");
+
+    // 2. Listar usuários
+    std::cout << "\n[2] Listando usuarios..." << std::endl;
+    auto usuarios = listarUsuarios();
+    std::cout << "[FACHADA] Total de usuarios: " << usuarios.size() << std::endl;
+
+    // 3. Criar contas
+    std::cout << "\n[3] Criando contas..." << std::endl;
+    criarConta("0001-001", "12345678900", "Rua A, 123");
+    criarConta("0001-002", "12345678900", "Rua B, 456");
+
+    // 4. Listar contas de um usuário
+    std::cout << "\n[4] Listando contas de Sophia..." << std::endl;
+    auto contas = listarContasPorUsuario("12345678900");
+    std::cout << "[FACHADA] Contas do usuario: " << contas.size() << std::endl;
+
+    // 5. Criar hidrômetro
+    std::cout << "\n[5] Criando hidrometro..." << std::endl;
+    criarHidrometro("H123456", "0001-001");
+
+    // 6. Atualizar usuário
+    std::cout << "\n[6] Atualizando usuario..." << std::endl;
+    atualizarUsuario("12345678900", "sophia.novo@email.com");
+
+    std::cout << "\nFIM DO TESTE" << std::endl;
+}
