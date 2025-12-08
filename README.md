@@ -19,7 +19,7 @@ A classe Fachada encapsula e simplifica o acesso ao subsistema de usuários, con
 - Associação de múltiplos hidrômetros a uma mesma conta.
 - Atualização de dados de usuário.
 - Listagem de usuários, contas e hidrômetros por meio da fachada.
-- Execução de um “teste rápido” no main.cpp que exercita as operações principais.
+- Execução de um “teste inicial” no main.cpp que exercita as operações principais.
 
 ## Estrutura do código
 - `include/subsistemas/usuarios/Usuario.hpp` → Declara a entidade Usuario (CPF, nome, e‑mail, lista de contas).
