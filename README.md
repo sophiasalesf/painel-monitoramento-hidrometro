@@ -8,7 +8,7 @@ Sistema em C++ que implementa o padrão de projeto Facade para gerenciar usuári
 ## Padrões de projeto implementados
 | Padrão        | Onde ver no código                                                                 |
 |---------------|-------------------------------------------------------------------------------------|
-| **Facade**    | `include/subsistemas/fachada/Fachada.hpp` e `src/subsistemas/fachada/Fachada.cpp` |
+| **Facade**    | `include/subsistemas/fachada/Fachada.hpp` e `src/subsistemas/fachada/Fachada.cpp` - Interface simplificada que coordena os subsistemas de usuários, contas e hidrômetros|
 
 ## Funcionalidades
 - Criação de usuários com CPF, nome e e‑mail.
