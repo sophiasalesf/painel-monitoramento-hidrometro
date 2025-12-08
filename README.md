@@ -61,4 +61,4 @@ Sophia Sales
 
 IFPB – Engenharia de Computação
 
-GitHub: https://github.com/Sophia7b
+GitHub: https://github.com/sophiasalesf
