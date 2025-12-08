@@ -6,10 +6,9 @@ Sistema em C++ que implementa o padrão de projeto Facade para gerenciar usuári
 
 
 ## Padrões de projeto implementados
-
-
-Facade (Fachada)
-A classe Fachada encapsula e simplifica o acesso ao subsistema de usuários, contas e hidrômetros. Em vez de o código cliente lidar diretamente com múltiplas classes e serviços, interage apenas com a fachada, que coordena as chamadas internas.
+| Padrão        | Onde ver no código                                                                 |
+|---------------|-------------------------------------------------------------------------------------|
+| **Facade**    | `include/subsistemas/fachada/Fachada.hpp` e `src/subsistemas/fachada/Fachada.cpp` |
 
 ## Funcionalidades
 - Criação de usuários com CPF, nome e e‑mail.
