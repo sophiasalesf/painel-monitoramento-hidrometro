@@ -22,25 +22,25 @@ A classe Fachada encapsula e simplifica o acesso ao subsistema de usuários, con
 - Execução de um “teste rápido” no main.cpp que exercita as operações principais.
 
 ## Estrutura do código
-- 'include/subsistemas/usuarios/Usuario.hpp' → Declara a entidade Usuario (CPF, nome, e‑mail, lista de contas).
+- `include/subsistemas/usuarios/Usuario.hpp` → Declara a entidade Usuario (CPF, nome, e‑mail, lista de contas).
 
-- 'include/subsistemas/usuarios/Conta.hpp' → Declara a entidade Conta (número da conta, CPF do titular, endereço, hidrômetro associado).
+- `include/subsistemas/usuarios/Conta.hpp` → Declara a entidade Conta (número da conta, CPF do titular, endereço, hidrômetro associado).
 
-- 'include/subsistemas/usuarios/Hidrometro.hpp' → Declara a entidade Hidrometro (identificador, leitura atual, etc.).
+- `include/subsistemas/usuarios/Hidrometro.hpp` → Declara a entidade Hidrometro (identificador, leitura atual, etc.).
 
-- 'include/subsistemas/usuarios/UsuarioService.hpp' → Camada de serviço responsável pelo CRUD de Usuário, Conta e Hidrometro.
+- `include/subsistemas/usuarios/UsuarioService.hpp` → Camada de serviço responsável pelo CRUD de Usuário, Conta e Hidrometro.
 
-- 'include/subsistemas/fachada/Fachada.hpp' → Declara a classe Fachada, que expõe métodos de alto nível para o painel.
+- `include/subsistemas/fachada/Fachada.hpp` → Declara a classe Fachada, que expõe métodos de alto nível para o painel.
 
-- 'src/subsistemas/usuarios/*.cpp' → Implementações de Usuario, Conta, Hidrometro e UsuarioService.
+- `src/subsistemas/usuarios/*.cpp` → Implementações de Usuario, Conta, Hidrometro e UsuarioService.
 
-- 'src/subsistemas/fachada/Fachada.cpp' → Implementação da classe Fachada.
+- `src/subsistemas/fachada/Fachada.cpp` → Implementação da classe Fachada.
 
-- 'src/main.cpp' → Ponto de entrada. Executa um roteiro de teste chamando apenas a fachada (cria usuários, contas, hidrômetro, atualiza dados e imprime logs no terminal).
+- `src/main.cpp` → Ponto de entrada. Executa um roteiro de teste chamando apenas a fachada (cria usuários, contas, hidrômetro, atualiza dados e imprime logs no terminal).
 
 ## Como compilar e executar
 1. Compile o projeto no PowerShell (Windows, usando g++ instalado e estando na pasta raiz do projeto):
-'''
+```
 g++ -std=c++17 -I include `
   src/main.cpp `
   src/subsistemas/usuarios/Usuario.cpp `
@@ -49,10 +49,10 @@ g++ -std=c++17 -I include `
   src/subsistemas/usuarios/UsuarioService.cpp `
   src/subsistemas/fachada/Fachada.cpp `
   -o painel.exe
-'''
+```
 
 2. Execute o executáxel:
-'.\painel.exe'
+`.\painel.exe`
 
 ## Exemplo de saída no terminal
 ![alt text](image.png)
