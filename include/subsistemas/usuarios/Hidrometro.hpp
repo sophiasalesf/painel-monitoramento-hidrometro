@@ -2,32 +2,21 @@
 #define HIDROMETRO_HPP
 
 #include <string>
-#include <ctime>
+#include "../notificacoes/Subject.hpp"
 
-class Hidrometro 
-{
+class Hidrometro : public Subject {
 public:
-    // Construtores
+    // construtor padrão
     Hidrometro();
-    Hidrometro(const std::string& numeroHidrometro, const std::string& numeroConta);
+    Hidrometro(const std::string& numero, double leituraInicial);
 
-    // Getters
-    std::string getNumeroHidrometro() const;
-    std::string getNumeroConta() const;
+    std::string getNumero() const;
     double getLeituraAtual() const;
-    std::string getDataCriacao() const;
-
-    // Setters
     void setLeituraAtual(double novaLeitura);
 
-    // Exibição
-    std::string toString() const;
-
 private:
-    std::string numeroHidrometro;
-    std::string numeroConta;
+    std::string numero;
     double leituraAtual;
-    std::string dataCriacao;
 };
 
 #endif

@@ -5,6 +5,8 @@
 // Construtor
 Fachada::Fachada() {
     std::cout << "[FACHADA] Sistema inicializado com sucesso!" << std::endl;
+
+    notificadorAlertas = std::make_shared<Notificador>("Alertas de Consumo");
 }
 
 // INTERFACE SIMPLIFICADA PARA USUÁRIOS 
@@ -44,7 +46,16 @@ std::vector<Conta> Fachada::listarContasPorUsuario(const std::string& cpfTitular
 // INTERFACE SIMPLIFICADA PARA HIDRÔMETROS 
 bool Fachada::criarHidrometro(const std::string& numeroHidrometro, const std::string& numeroConta) {
     std::cout << "[FACHADA] ";
-    return usuarioService.criarHidrometro(numeroHidrometro, numeroConta);
+    bool criado = usuarioService.criarHidrometro(numeroHidrometro, numeroConta);
+
+    if (criado) {
+        Hidrometro* hidrometro = usuarioService.obterHidrometro(numeroHidrometro);
+        if (hidrometro != nullptr) {
+            hidrometro->adicionarObservador(notificadorAlertas);
+        }
+    }
+
+    return criado;
 }
 
 Hidrometro* Fachada::obterHidrometro(const std::string& numeroHidrometro) {
@@ -87,7 +98,7 @@ void Fachada::testar() {
     std::cout << "\n[6] Atualizando usuario..." << std::endl;
     atualizarUsuario("12345678900", "sophia.novo@email.com");
 
-    std::cout << "\nFIM DO TESTE\n" << std::endl;
+    std::cout << "\nFIM DO PRIMEIRO TESTE\n" << std::endl;
 }
 
 double Fachada::processarImagemOCR(const std::string& caminhoImagem) {
@@ -107,5 +118,12 @@ double Fachada::processarImagemSegmentacao(const std::string& caminhoImagem) {
     double valor = processador.processar();
     std::cout << "[FACHADA] Valor obtido (Segmentacao): " 
               << valor << " m^3" << std::endl;
+
+    // Integração com hidrômetro e Observer (Semana 3)
+    Hidrometro* hidrometro = usuarioService.obterHidrometro("H123456");
+    if (hidrometro != nullptr) {
+        hidrometro->setLeituraAtual(valor);
+    }
+
     return valor;
 }

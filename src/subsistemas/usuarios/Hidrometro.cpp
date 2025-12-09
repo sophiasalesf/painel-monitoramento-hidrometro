@@ -1,46 +1,22 @@
 #include "../../../include/subsistemas/usuarios/Hidrometro.hpp"
-#include <iostream>
-#include <sstream>
-#include <ctime>
 
-// Construtor padrão
-Hidrometro::Hidrometro()
-    : numeroHidrometro(""), numeroConta(""), leituraAtual(0.0), dataCriacao("") 
-{}
+Hidrometro::Hidrometro() : numero(""), leituraAtual(0.0) {}
 
-// Construtor com parâmetros
-Hidrometro::Hidrometro(const std::string& numeroHidrometro, const std::string& numeroConta)
-    : numeroHidrometro(numeroHidrometro), numeroConta(numeroConta), leituraAtual(0.0) {
-    // Gerar timestamp (simplificado)
-    time_t agora = time(nullptr);
-    dataCriacao = std::to_string(agora);
-}
+Hidrometro::Hidrometro(const std::string& numero, double leituraInicial)
+    : numero(numero), leituraAtual(leituraInicial) {}
 
-// Getters
-std::string Hidrometro::getNumeroHidrometro() const {
-    return numeroHidrometro;
-}
-
-std::string Hidrometro::getNumeroConta() const {
-    return numeroConta;
+std::string Hidrometro::getNumero() const {
+    return numero;
 }
 
 double Hidrometro::getLeituraAtual() const {
     return leituraAtual;
 }
 
-std::string Hidrometro::getDataCriacao() const {
-    return dataCriacao;
-}
-
-// Setters
 void Hidrometro::setLeituraAtual(double novaLeitura) {
     leituraAtual = novaLeitura;
-}
 
-// Exibição
-std::string Hidrometro::toString() const {
-    std::stringstream ss;
-    ss << "Hidrometro(" << numeroHidrometro << ", Leitura: " << leituraAtual << " m3)";
-    return ss.str();
+    // Notifica observadores sobre a mudança
+    std::string msg = "Hidrômetro " + numero + " atualizado para " + std::to_string(leituraAtual) + " m^3";
+    notificarObservadores(msg);
 }

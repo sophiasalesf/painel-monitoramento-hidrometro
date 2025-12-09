@@ -129,9 +129,9 @@ bool UsuarioService::criarHidrometro(const std::string& numeroHidrometro, const 
         return false;
     }
 
-    Hidrometro novoHidrometro(numeroHidrometro, numeroConta);
+    Hidrometro novoHidrometro(numeroHidrometro, 0.0);
     hidrometros[numeroHidrometro] = novoHidrometro;
-    std::cout << "[USUARIOSERVICE] Hidrometro criado: " << novoHidrometro.toString() << std::endl;
+    std::cout << "[USUARIOSERVICE] Hidrometro criado: Hidrometro(" << numeroHidrometro << ", Leitura: 0 m3)" << std::endl;
     return true;
 }
 
@@ -144,12 +144,10 @@ Hidrometro* UsuarioService::obterHidrometro(const std::string& numeroHidrometro)
     return nullptr;
 }
 
-std::vector<Hidrometro> UsuarioService::listarHidrometrosPorConta(const std::string& numeroConta) {
+std::vector<Hidrometro> UsuarioService::listarHidrometrosPorConta(const std::string& /*numeroConta*/) {
     std::vector<Hidrometro> lista;
     for (auto& par : hidrometros) {
-        if (par.second.getNumeroConta() == numeroConta) {
-            lista.push_back(par.second);
-        }
+        lista.push_back(par.second);
     }
     return lista;
 }

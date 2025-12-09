@@ -4,6 +4,7 @@
 #include "../usuarios/UsuarioService.hpp"
 #include "../monitoramento/ProcessadorOCR.hpp"
 #include "../monitoramento/ProcessadorSegmentacao.hpp"
+#include "../notificacoes/Notificador.hpp"
 
 #include <string>
 #include <memory>
@@ -38,6 +39,7 @@ public:
 
 private:
     UsuarioService usuarioService;
+    std::shared_ptr<Notificador> notificadorAlertas;
 };
 
 #endif
