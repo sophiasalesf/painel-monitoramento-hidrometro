@@ -23,6 +23,7 @@ Sistema em C++ que implementa os padrões de projeto Facade, Template Method, Ob
 - Associação de múltiplos hidrômetros a uma mesma conta.
 - Atualização de dados de usuário.
 - Listagem de usuários, contas e hidrômetros por meio da fachada.
+- Registro de eventos do painel em log com níveis de informação/aviso em `logs/painel.log`.
 - Execução de um roteiro de teste no `main.cpp` que exercita as operações principais pela fachada. 
 
 ### Monitoramento de imagens com Template Method
@@ -86,9 +87,8 @@ g++ -o main src/main.cpp src/subsistemas/fachada/*.cpp src/subsistemas/usuarios/
 `.\main`
 
 ## Exemplo de saída no terminal
-<img width="646" height="429" alt="image" src="https://github.com/user-attachments/assets/0dfe9373-8eb8-4863-9a6c-b69ba2c8a9c3" />
+<img width="824" height="910" alt="image" src="https://github.com/user-attachments/assets/6d2b04d5-482a-4598-8f41-507c163ce2fe" />
 
-<img width="823" height="569" alt="image" src="https://github.com/user-attachments/assets/c43bf7e0-c45a-46a0-a532-9fe84234b643" />
 
 ## Desenvolvedora
 Sophia Sales
