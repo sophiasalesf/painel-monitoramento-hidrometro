@@ -7,10 +7,10 @@ Fachada::Fachada() {
     std::cout << "[FACHADA] Sistema inicializado com sucesso!" << std::endl;
 
     notificadorAlertas = std::make_shared<Notificador>("Alertas de Consumo");
+    armazenamentoStrategy = nullptr;
 }
 
 // INTERFACE SIMPLIFICADA PARA USUÁRIOS 
-
 bool Fachada::criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email) {
     std::cout << "[FACHADA] ";
     return usuarioService.criarUsuario(cpf, nome, email);
@@ -27,6 +27,11 @@ bool Fachada::atualizarUsuario(const std::string& cpf, const std::string& email)
 
 std::vector<Usuario> Fachada::listarUsuarios() {
     return usuarioService.listarUsuarios();
+}
+
+void Fachada::definirLimiteConsumoUsuario(const std::string& cpf, double limite) {
+    std::cout << "[FACHADA] ";
+    usuarioService.definirLimiteConsumo(cpf, limite);
 }
 
 // INTERFACE SIMPLIFICADA PARA CONTAS 
@@ -65,6 +70,45 @@ Hidrometro* Fachada::obterHidrometro(const std::string& numeroHidrometro) {
 std::vector<Hidrometro> Fachada::listarHidrometrosPorConta(const std::string& numeroConta) {
     return usuarioService.listarHidrometrosPorConta(numeroConta);
 }
+
+void Fachada::listarHistoricoHidrometro(const std::string& numeroHidrometro) {
+    std::cout << "[FACHADA] ";
+    usuarioService.listarHistoricoHidrometro(numeroHidrometro);
+}
+
+// INTERFACE SIMPLIFICADA PARA ARMAZENAMENTO
+void Fachada::configurarArmazenamento(std::shared_ptr<ArmazenamentoStrategy> strategy) {
+    armazenamentoStrategy = strategy;
+}
+
+void Fachada::salvarSistema() {
+    if (!armazenamentoStrategy) {
+        std::cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
+        return;
+    }
+
+    auto usuarios = usuarioService.listarUsuarios();
+    auto contas = usuarioService.listarTodasContas();
+    auto hidrometros = usuarioService.listarTodosHidrometros();
+
+    armazenamentoStrategy->salvar(usuarios, contas, hidrometros);
+}
+
+void Fachada::carregarSistema() {
+    if (!armazenamentoStrategy) {
+        std::cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
+        return;
+    }
+
+    std::vector<Usuario> usuarios;
+    std::vector<Conta> contas;
+    std::vector<Hidrometro> hidrometros;
+
+    armazenamentoStrategy->carregar(usuarios, contas, hidrometros);
+
+    usuarioService.recarregarDados(usuarios, contas, hidrometros);
+}
+
 
 // TESTES
 void Fachada::testar() {
@@ -123,6 +167,18 @@ double Fachada::processarImagemSegmentacao(const std::string& caminhoImagem) {
     Hidrometro* hidrometro = usuarioService.obterHidrometro("H123456");
     if (hidrometro != nullptr) {
         hidrometro->setLeituraAtual(valor);
+    }
+
+    // Verificação de limite de consumo (exemplo para CPF 12345678900)
+    double limite = usuarioService.obterLimiteConsumo("12345678900");
+    if (limite > 0.0) {
+        double consumoTotal = usuarioService.obterConsumoTotalUsuario("12345678900");
+        if (consumoTotal > limite && notificadorAlertas) {
+            std::string msg = "LIMITE EXCEDIDO para usuario 12345678900: "
+                              + std::to_string(consumoTotal) + " m^3 (limite "
+                              + std::to_string(limite) + " m^3)";
+            notificadorAlertas->atualizar(msg);
+        }
     }
 
     return valor;

@@ -58,6 +58,22 @@ std::vector<Usuario> UsuarioService::listarUsuarios() {
     return lista;
 }
 
+std::vector<Conta> UsuarioService::listarTodasContas() {
+    std::vector<Conta> lista;
+    for (auto& par : contas) {
+        lista.push_back(par.second);
+    }
+    return lista;
+}
+
+std::vector<Hidrometro> UsuarioService::listarTodosHidrometros() {
+    std::vector<Hidrometro> lista;
+    for (auto& par : hidrometros) {
+        lista.push_back(par.second);
+    }
+    return lista;
+}
+
 // CRUD CONTAS 
 bool UsuarioService::criarConta(const std::string& numeroConta, const std::string& cpfTitular, const std::string& endereco) {
     if (!usuarioExiste(cpfTitular)) {
@@ -163,6 +179,47 @@ bool UsuarioService::deletarHidrometro(const std::string& numeroHidrometro) {
     return false;
 }
 
+void UsuarioService::listarHistoricoHidrometro(const std::string& numeroHidrometro) {
+    Hidrometro* h = obterHidrometro(numeroHidrometro);
+    if (h == nullptr) {
+        return; // mensagem de erro já foi exibida por obterHidrometro
+    }
+
+    const auto& historico = h->getHistoricoLeituras();
+    std::cout << "[USUARIOSERVICE] Historico de leituras do hidrometro " 
+              << numeroHidrometro << ":\n";
+    
+    if (historico.empty()) {
+        std::cout << "  (nenhuma leitura registrada ainda)\n";
+    } else {
+        for (size_t i = 0; i < historico.size(); ++i) {
+            std::cout << "  [" << (i+1) << "] " << historico[i] << " m^3\n";
+        }
+    }
+}
+
+void UsuarioService::recarregarDados(
+    const std::vector<Usuario>& novosUsuarios,
+    const std::vector<Conta>& novasContas,
+    const std::vector<Hidrometro>& novosHidrometros
+) {
+    usuarios.clear();
+    contas.clear();
+    hidrometros.clear();
+
+    for (const auto& u : novosUsuarios) {
+        usuarios[u.getCpf()] = u;
+    }
+
+    for (const auto& c : novasContas) {
+        contas[c.getNumeroConta()] = c;
+    }
+
+    for (const auto& h : novosHidrometros) {
+        hidrometros[h.getNumero()] = h;
+    }
+}
+
 // VERIFICAÇÕES 
 bool UsuarioService::usuarioExiste(const std::string& cpf) {
     return usuarios.find(cpf) != usuarios.end();
@@ -174,4 +231,39 @@ bool UsuarioService::contaExiste(const std::string& numeroConta) {
 
 bool UsuarioService::hidrometroExiste(const std::string& numeroHidrometro) {
     return hidrometros.find(numeroHidrometro) != hidrometros.end();
+}
+
+// GESTÃO DE LIMITES DE CONSUMO
+
+void UsuarioService::definirLimiteConsumo(const std::string& cpf, double limite) {
+    if (!usuarioExiste(cpf)) {
+        std::cerr << "[USUARIOSERVICE] Erro: Usuario com CPF " << cpf << " nao encontrado!" << std::endl;
+        return;
+    }
+    limitesConsumo[cpf] = limite;
+    std::cout << "[USUARIOSERVICE] Limite de consumo definido para usuario " 
+              << cpf << ": " << limite << " m^3" << std::endl;
+}
+
+double UsuarioService::obterLimiteConsumo(const std::string& cpf) {
+    auto it = limitesConsumo.find(cpf);
+    if (it != limitesConsumo.end()) {
+        return it->second;
+    }
+    // sem limite configurado
+    return -1.0;
+}
+
+double UsuarioService::obterConsumoTotalUsuario(const std::string& cpf) {
+    double total = 0.0;
+    auto contas = listarContasPorUsuario(cpf);
+    
+    for (const auto& conta : contas) {
+        for (auto& par : hidrometros) {
+            // soma leitura atual de todos os hidrometros (simplificado)
+            total += par.second.getLeituraAtual();
+        }
+    }
+    
+    return total;
 }

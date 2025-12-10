@@ -13,10 +13,17 @@ double Hidrometro::getLeituraAtual() const {
     return leituraAtual;
 }
 
+const std::vector<double>& Hidrometro::getHistoricoLeituras() const {
+    return historicoLeituras;
+}
+
 void Hidrometro::setLeituraAtual(double novaLeitura) {
+    // registra histórico antes de atualizar
+    historicoLeituras.push_back(novaLeitura);
+
     leituraAtual = novaLeitura;
 
     // Notifica observadores sobre a mudança
-    std::string msg = "Hidrômetro " + numero + " atualizado para " + std::to_string(leituraAtual) + " m^3";
+    std::string msg = "Hidrometro " + numero + " atualizado para " + std::to_string(leituraAtual) + " m^3";
     notificarObservadores(msg);
 }

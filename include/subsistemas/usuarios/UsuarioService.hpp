@@ -38,10 +38,29 @@ public:
     bool contaExiste(const std::string& numeroConta);
     bool hidrometroExiste(const std::string& numeroHidrometro);
 
+    // Gestão de limites de consumo
+    void definirLimiteConsumo(const std::string& cpf, double limite);
+    double obterLimiteConsumo(const std::string& cpf);
+    double obterConsumoTotalUsuario(const std::string& cpf);
+
+    // Acesso completo para armazenamento 
+    std::vector<Conta> listarTodasContas();
+    std::vector<Hidrometro> listarTodosHidrometros();
+
+    // Consulta de histórico
+    void listarHistoricoHidrometro(const std::string& numeroHidrometro);
+
+    void recarregarDados(
+        const std::vector<Usuario>& novosUsuarios,
+        const std::vector<Conta>& novasContas,
+        const std::vector<Hidrometro>& novosHidrometros
+    );
+    
 private:
     std::map<std::string, Usuario> usuarios;  // Chave: CPF
     std::map<std::string, Conta> contas;      // Chave: Número da conta
     std::map<std::string, Hidrometro> hidrometros;  // Chave: Número do hidrômetro
+    std::map<std::string, double> limitesConsumo;  // cpf: limite em m³
 };
 
 #endif

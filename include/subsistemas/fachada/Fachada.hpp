@@ -5,6 +5,7 @@
 #include "../monitoramento/ProcessadorOCR.hpp"
 #include "../monitoramento/ProcessadorSegmentacao.hpp"
 #include "../notificacoes/Notificador.hpp"
+#include "../armazenamento/ArmazenamentoStrategy.hpp"
 
 #include <string>
 #include <memory>
@@ -20,6 +21,9 @@ public:
     bool atualizarUsuario(const std::string& cpf, const std::string& email);
     std::vector<Usuario> listarUsuarios();
 
+     // Limites de consumo
+    void definirLimiteConsumoUsuario(const std::string& cpf, double limite);
+    
     // INTERFACE SIMPLIFICADA PARA CONTAS 
     bool criarConta(const std::string& numeroConta, const std::string& cpfTitular, const std::string& endereco);
     Conta* obterConta(const std::string& numeroConta);
@@ -29,10 +33,17 @@ public:
     bool criarHidrometro(const std::string& numeroHidrometro, const std::string& numeroConta);
     Hidrometro* obterHidrometro(const std::string& numeroHidrometro);
     std::vector<Hidrometro> listarHidrometrosPorConta(const std::string& numeroConta);
+    void listarHistoricoHidrometro(const std::string& numeroHidrometro);
+
 
     // INTERFACE SIMPLIFICADA PARA MONITORAMENTO DE IMAGENS
     double processarImagemOCR(const std::string& caminhoImagem);
     double processarImagemSegmentacao(const std::string& caminhoImagem);
+
+    // INTERFACE SIMPLIFICADA PARA ARMAZENAMENTO
+    void configurarArmazenamento(std::shared_ptr<ArmazenamentoStrategy> strategy);
+    void salvarSistema();
+    void carregarSistema();
 
     // TESTES 
     void testar();
@@ -40,6 +51,7 @@ public:
 private:
     UsuarioService usuarioService;
     std::shared_ptr<Notificador> notificadorAlertas;
+    std::shared_ptr<ArmazenamentoStrategy> armazenamentoStrategy;
 };
 
 #endif
