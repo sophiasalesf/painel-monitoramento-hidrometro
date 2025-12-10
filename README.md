@@ -3,7 +3,7 @@
 Sistema em C++ que implementa os padrões de projeto Facade, Template Method, Observer e Strategy para gerenciar usuários, contas de consumo de água, hidrômetros, o monitoramento de imagens do hidrômetro, notificações automáticas e armazenamento configurável de dados.
 
 ## Evolução atual do projeto 
-▰▰▰▰▰▰▰▰▰▱ 90%
+▰▰▰▰▰▰▰▰▱▱ 80%
 
 ## Padrões de projeto implementados
 
