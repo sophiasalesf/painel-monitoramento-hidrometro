@@ -1,18 +1,18 @@
 # Painel de Monitoramento de Hidrômetro (Fachada)
 
-Sistema em C++ que implementa os padrões de projeto Facade, Template Method e Observer para gerenciar usuários, contas de consumo de água, hidrômetros, o monitoramento de imagens do hidrômetro e as notificações automáticas de atualização de leitura.
+Sistema em C++ que implementa os padrões de projeto Facade, Template Method, Observer e Strategy para gerenciar usuários, contas de consumo de água, hidrômetros, o monitoramento de imagens do hidrômetro, notificações automáticas e armazenamento configurável de dados.
 
 ## Evolução atual do projeto 
-▰▰▰▰▰▰▰▱▱▱ 75%
+▰▰▰▰▰▰▰▰▰▱ 90%
 
 ## Padrões de projeto implementados
 
-| Padrão           | Onde ver no código                                                                                             |
-|------------------|-----------------------------------------------------------------------------------------------------------------|
-| **Facade**       | `include/subsistemas/fachada/Fachada.hpp` e `src/subsistemas/fachada/Fachada.cpp` – Coordena usuários, contas, hidrômetros e o subsistema de monitoramento de imagens. |
-| **Template Method** | `include/subsistemas/monitoramento/ProcessadorImagem.hpp` e `src/subsistemas/monitoramento/ProcessadorImagem.cpp` – Define o algoritmo de processamento de imagens, com etapas especializadas nas subclasses. |
-| **Observer**     | `include/subsistemas/notificacoes/*.hpp` e `src/subsistemas/notificacoes/*.cpp` – Notifica automaticamente quando a leitura de um hidrômetro é atualizada a partir do processamento de imagens. |
-
+| Padrão            | Onde ver no código                                                                                                                   |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| **Facade**        | `include/subsistemas/fachada/Fachada.hpp` e `src/subsistemas/fachada/Fachada.cpp` – coordena usuários, contas, hidrômetros, monitoramento de imagens e armazenamento. |
+| **Template Method** | `include/subsistemas/monitoramento/ProcessadorImagem.hpp` e `src/subsistemas/monitoramento/*.cpp` – define o algoritmo de processamento de imagens, com etapas especializadas nas subclasses (OCR e Segmentação). |
+| **Observer**      | `include/subsistemas/notificacoes/*.hpp` e `src/subsistemas/notificacoes/*.cpp` – notifica automaticamente quando a leitura de um hidrômetro é atualizada a partir do processamento de imagens. |
+| **Strategy**      | `include/subsistemas/armazenamento/*.hpp` e `src/subsistemas/armazenamento/*.cpp` – define estratégias de armazenamento (console ou arquivos na pasta \`dados/\`). |
 
 ## Funcionalidades
 
@@ -37,47 +37,58 @@ Sistema em C++ que implementa os padrões de projeto Facade, Template Method e O
 - A entidade `Hidrometro` passa a herdar de `Subject` e notifica observadores sempre que `setLeituraAtual` é chamado.
 - Integração com a fachada: após o processamento por segmentação em `processarImagemSegmentacao`, a fachada atualiza o hidrômetro e dispara um alerta no terminal indicando o novo valor lido.
 
+### Histórico de leituras e limites de consumo
+- Cada hidrômetro mantém um histórico de leituras em memória, registrado sempre que a leitura é atualizada.​
+- A fachada expõe um método para listar o histórico de um hidrômetro específico, mostrando todas as leituras registradas.​
+- O serviço de usuários permite definir um limite de consumo por usuário (em m³).​
+- Quando o consumo total de um usuário ultrapassa o limite configurado, o sistema dispara uma notificação de alerta pelo Notificador.
+
+### Armazenamento com Strategy
+
+- Interface `ArmazenamentoStrategy` define a operação de salvar os dados do sistema.
+- `ArmazenamentoConsoleStrategy` implementa a estratégia que apenas exibe os dados no console.
+- `ArmazenamentoArquivoStrategy` implementa a estratégia que salva usuários, contas e hidrômetros em arquivos texto na pasta `dados/`.
+- A fachada utiliza uma instância de `ArmazenamentoStrategy`, permitindo trocar a forma de armazenamento sem alterar o restante do sistema.
+
 ## Estrutura do código
 
-- `include/subsistemas/usuarios/Usuario.hpp` → Declara a entidade Usuario (CPF, nome, e‑mail, lista de contas).
-- `include/subsistemas/usuarios/Conta.hpp` → Declara a entidade Conta (número da conta, CPF do titular, endereço, hidrômetro associado).
-- `include/subsistemas/usuarios/Hidrometro.hpp` → Declara a entidade Hidrometro (identificador, leitura atual, etc.).
-- `include/subsistemas/usuarios/UsuarioService.hpp` → Camada de serviço responsável pelo CRUD de Usuario, Conta e Hidrometro.
-- `include/subsistemas/fachada/Fachada.hpp` → Declara a classe Fachada, que expõe métodos de alto nível para o painel e para o monitoramento de imagens.  
-- `include/subsistemas/monitoramento/LeitorImagem.hpp` → Classe base simples para simular a leitura do valor do hidrômetro a partir de um caminho de imagem.  
-- `include/subsistemas/monitoramento/ProcessadorImagem.hpp` → Classe abstrata que define o Template Method de processamento de imagens.  
-- `include/subsistemas/monitoramento/ProcessadorOCR.hpp` → Implementação concreta do Template Method usando uma abordagem de OCR simulada.  
-- `include/subsistemas/monitoramento/ProcessadorSegmentacao.hpp` → Implementação concreta do Template Method usando uma abordagem simulada de segmentação. 
-- `include/subsistemas/notificacoes/Observer.hpp` → Interface base para observadores de notificações.
-- `include/subsistemas/notificacoes/Subject.hpp` → Classe base que gerencia a lista de observadores e a notificação.
-- `include/subsistemas/notificacoes/Notificador.hpp` → Observador concreto que exibe alertas de atualização de leitura no terminal.
+- `include/subsistemas/usuarios/Usuario.hpp` → entidade `Usuario` (CPF, nome, e‑mail, lista de contas).
+- `include/subsistemas/usuarios/Conta.hpp` → entidade `Conta` (número da conta, CPF do titular, endereço, hidrômetro associado).
+- `include/subsistemas/usuarios/Hidrometro.hpp` → entidade `Hidrometro` (identificador, leitura atual, histórico de leituras).
+- `include/subsistemas/usuarios/UsuarioService.hpp` → serviço responsável pelo CRUD de usuário, conta, hidrômetro, histórico e limites de consumo.
+- `include/subsistemas/fachada/Fachada.hpp` → classe `Fachada`, que expõe métodos de alto nível para o painel, imagens, histórico, limites e armazenamento.
+- `include/subsistemas/monitoramento/LeitorImagem.hpp` → simula a leitura de valor do hidrômetro a partir de um caminho de imagem.
+- `include/subsistemas/monitoramento/ProcessadorImagem.hpp` → Template Method de processamento de imagens.
+- `include/subsistemas/monitoramento/ProcessadorOCR.hpp` → implementação concreta com abordagem de OCR simulada.
+- `include/subsistemas/monitoramento/ProcessadorSegmentacao.hpp` → implementação concreta com abordagem simulada de segmentação.
+- `include/subsistemas/notificacoes/Observer.hpp` → interface base de observadores.
+- `include/subsistemas/notificacoes/Subject.hpp` → classe base que gerencia observadores e notificação.
+- `include/subsistemas/notificacoes/Notificador.hpp` → observador concreto que exibe alertas no terminal.
+- `include/subsistemas/armazenamento/ArmazenamentoStrategy.hpp` → interface de Strategy para armazenamento.
+- `include/subsistemas/armazenamento/ArmazenamentoConsoleStrategy.hpp` → Strategy que mostra dados no console.
+- `include/subsistemas/armazenamento/ArmazenamentoArquivoStrategy.hpp` → Strategy que salva dados na pasta `dados/`.
 
-- `src/subsistemas/usuarios/*.cpp` → Implementações de Usuario, Conta, Hidrometro e UsuarioService.
-- `src/subsistemas/fachada/Fachada.cpp` → Implementação da classe Fachada.
-- `src/subsistemas/monitoramento/*.cpp` → Implementações de LeitorImagem, ProcessadorImagem, ProcessadorOCR e ProcessadorSegmentacao.  
-- `src/main.cpp` → Ponto de entrada. Executa um roteiro de teste que usa apenas a fachada para criar dados e processar imagens do hidrômetro.  
-- `src/subsistemas/notificacoes/*.cpp` → Implementações de `Subject` e `Notificador`.
-
+- `src/subsistemas/usuarios/*.cpp` → implementações de `Usuario`, `Conta`, `Hidrometro` e `UsuarioService`.
+- `src/subsistemas/fachada/Fachada.cpp` → implementação da classe `Fachada`.
+- `src/subsistemas/monitoramento/*.cpp` → implementações de `LeitorImagem`, `ProcessadorImagem`, `ProcessadorOCR` e `ProcessadorSegmentacao`.
+- `src/subsistemas/notificacoes/*.cpp` → implementações de `Subject` e `Notificador`.
+- `src/subsistemas/armazenamento/*.cpp` → implementações das estratégias de armazenamento.
+- `src/main.cpp` → ponto de entrada; executa um roteiro de teste que usa apenas a fachada para criar dados, processar imagens, atualizar hidrômetros, listar histórico, verificar limites e salvar dados.
 
 ## Como compilar e executar
 
 1. Compile o projeto no PowerShell (Windows, usando g++) na pasta raiz do projeto:
 ```
-g++ -o main src/main.cpp
-src/subsistemas/monitoramento/LeitorImagem.cpp src/subsistemas/monitoramento/ProcessadorImagem.cpp
-src/subsistemas/monitoramento/ProcessadorOCR.cpp src/subsistemas/monitoramento/ProcessadorSegmentacao.cpp
-src/subsistemas/fachada/Fachada.cpp src/subsistemas/usuarios/UsuarioService.cpp
-src/subsistemas/usuarios/Usuario.cpp src/subsistemas/usuarios/Conta.cpp
-src/subsistemas/usuarios/Hidrometro.cpp src/subsistemas/notificacoes/Notificador.cpp
-src/subsistemas/notificacoes/Subject.cpp -Iinclude
+g++ -o main src/main.cpp src/subsistemas/fachada/*.cpp src/subsistemas/usuarios/*.cpp src/subsistemas/monitoramento/*.cpp src/subsistemas/notificacoes/*.cpp src/subsistemas/armazenamento/*.cpp -Iinclude
 ```
 
 2. Execute o programa:
 `.\main`
 
 ## Exemplo de saída no terminal
-<img width="627" height="835" alt="image" src="https://github.com/user-attachments/assets/39300cc4-9fc7-4d96-955d-8c7682ec66a9" />
+<img width="646" height="429" alt="image" src="https://github.com/user-attachments/assets/0dfe9373-8eb8-4863-9a6c-b69ba2c8a9c3" />
 
+<img width="823" height="569" alt="image" src="https://github.com/user-attachments/assets/c43bf7e0-c45a-46a0-a532-9fe84234b643" />
 
 ## Desenvolvedora
 Sophia Sales
