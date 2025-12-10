@@ -20,7 +20,7 @@ void ArmazenamentoArquivoStrategy::salvar(
     std::ofstream arqHidrometros(caminhoBase + "hidrometros.txt");
 
     if (!arqUsuarios || !arqContas || !arqHidrometros) {
-        std::cerr << "[ArmazenamentoArquivoStrategy] Erro ao abrir arquivos para escrita.\n";
+        std::cerr << "[ARMAZENAMENTO] Erro ao abrir arquivos para escrita.\n";
         return;
     }
 
@@ -44,7 +44,7 @@ void ArmazenamentoArquivoStrategy::salvar(
                    << h.getLeituraAtual() << '\n';
     }
 
-    std::cout << "[ArmazenamentoArquivoStrategy] Dados salvos em arquivos na pasta " << caminhoBase << "\n";
+    std::cout << "[ARMAZENAMENTO] Dados salvos em arquivos na pasta " << caminhoBase << "\n";
 }
 
 void ArmazenamentoArquivoStrategy::carregar(
@@ -61,7 +61,7 @@ void ArmazenamentoArquivoStrategy::carregar(
     std::ifstream arqHidrometros(caminhoBase + "hidrometros.txt");
 
     if (!arqUsuarios || !arqContas || !arqHidrometros) {
-        std::cerr << "[ArmazenamentoArquivoStrategy] Arquivos de dados nao encontrados; nada carregado.\n";
+        std::cerr << "[ARMAZENAMENTO] Arquivos de dados nao encontrados; nada carregado.\n";
         return;
     }
 
@@ -105,6 +105,6 @@ void ArmazenamentoArquivoStrategy::carregar(
         hidrometros.push_back(h);
     }
 
-    std::cout << "[ArmazenamentoArquivoStrategy] Dados carregados de arquivos na pasta "
+    std::cout << "[ARMAZENAMENTO] Dados carregados de arquivos na pasta "
               << caminhoBase << "\n";
 }

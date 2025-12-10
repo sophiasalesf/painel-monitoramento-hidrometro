@@ -2,55 +2,65 @@
 #include <iostream>
 #include <iomanip>
 
+using std::cout;
+using std::endl;
+using std::string;
+using std::vector;
+using std::to_string;
+
 // Construtor
-Fachada::Fachada() {
-    std::cout << "[FACHADA] Sistema inicializado com sucesso!" << std::endl;
+Fachada::Fachada()
+    : logger("logs/painel.log") {
+    cout << "[FACHADA] Sistema inicializado com sucesso!" << endl;
 
     notificadorAlertas = std::make_shared<Notificador>("Alertas de Consumo");
     armazenamentoStrategy = nullptr;
+
+    logger.info("Sistema inicializado pela Fachada");
 }
 
+
 // INTERFACE SIMPLIFICADA PARA USUÁRIOS 
-bool Fachada::criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email) {
-    std::cout << "[FACHADA] ";
+bool Fachada::criarUsuario(const string& cpf, const string& nome, const string& email) {
+    cout << "[FACHADA] ";
     return usuarioService.criarUsuario(cpf, nome, email);
 }
 
-Usuario* Fachada::obterUsuario(const std::string& cpf) {
+Usuario* Fachada::obterUsuario(const string& cpf) {
     return usuarioService.obterUsuario(cpf);
 }
 
-bool Fachada::atualizarUsuario(const std::string& cpf, const std::string& email) {
-    std::cout << "[FACHADA] ";
+bool Fachada::atualizarUsuario(const string& cpf, const string& email) {
+    cout << "[FACHADA] ";
     return usuarioService.atualizarUsuario(cpf, email);
 }
 
-std::vector<Usuario> Fachada::listarUsuarios() {
+vector<Usuario> Fachada::listarUsuarios() {
     return usuarioService.listarUsuarios();
 }
 
-void Fachada::definirLimiteConsumoUsuario(const std::string& cpf, double limite) {
-    std::cout << "[FACHADA] ";
+void Fachada::definirLimiteConsumoUsuario(const string& cpf, double limite) {
+    cout << "[FACHADA] ";
     usuarioService.definirLimiteConsumo(cpf, limite);
 }
 
 // INTERFACE SIMPLIFICADA PARA CONTAS 
-bool Fachada::criarConta(const std::string& numeroConta, const std::string& cpfTitular, const std::string& endereco) {
-    std::cout << "[FACHADA] ";
+bool Fachada::criarConta(const string& numeroConta, const string& cpfTitular, const string& endereco) {
+    cout << "[FACHADA] ";
     return usuarioService.criarConta(numeroConta, cpfTitular, endereco);
 }
 
-Conta* Fachada::obterConta(const std::string& numeroConta) {
+Conta* Fachada::obterConta(const string& numeroConta) {
     return usuarioService.obterConta(numeroConta);
 }
 
-std::vector<Conta> Fachada::listarContasPorUsuario(const std::string& cpfTitular) {
+vector<Conta> Fachada::listarContasPorUsuario(const string& cpfTitular) {
     return usuarioService.listarContasPorUsuario(cpfTitular);
 }
 
 // INTERFACE SIMPLIFICADA PARA HIDRÔMETROS 
-bool Fachada::criarHidrometro(const std::string& numeroHidrometro, const std::string& numeroConta) {
-    std::cout << "[FACHADA] ";
+bool Fachada::criarHidrometro(const string& numeroHidrometro, const string& numeroConta) {
+    cout << "[FACHADA] ";
     bool criado = usuarioService.criarHidrometro(numeroHidrometro, numeroConta);
 
     if (criado) {
@@ -63,16 +73,16 @@ bool Fachada::criarHidrometro(const std::string& numeroHidrometro, const std::st
     return criado;
 }
 
-Hidrometro* Fachada::obterHidrometro(const std::string& numeroHidrometro) {
+Hidrometro* Fachada::obterHidrometro(const string& numeroHidrometro) {
     return usuarioService.obterHidrometro(numeroHidrometro);
 }
 
-std::vector<Hidrometro> Fachada::listarHidrometrosPorConta(const std::string& numeroConta) {
+vector<Hidrometro> Fachada::listarHidrometrosPorConta(const string& numeroConta) {
     return usuarioService.listarHidrometrosPorConta(numeroConta);
 }
 
-void Fachada::listarHistoricoHidrometro(const std::string& numeroHidrometro) {
-    std::cout << "[FACHADA] ";
+void Fachada::listarHistoricoHidrometro(const string& numeroHidrometro) {
+    cout << "[FACHADA] ";
     usuarioService.listarHistoricoHidrometro(numeroHidrometro);
 }
 
@@ -83,7 +93,8 @@ void Fachada::configurarArmazenamento(std::shared_ptr<ArmazenamentoStrategy> str
 
 void Fachada::salvarSistema() {
     if (!armazenamentoStrategy) {
-        std::cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
+        cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
+        logger.aviso("Tentativa de salvar sistema sem estrategia de armazenamento configurada");
         return;
     }
 
@@ -92,17 +103,18 @@ void Fachada::salvarSistema() {
     auto hidrometros = usuarioService.listarTodosHidrometros();
 
     armazenamentoStrategy->salvar(usuarios, contas, hidrometros);
+    logger.info("Sistema salvo via ArmazenamentoStrategy\n");
 }
 
 void Fachada::carregarSistema() {
     if (!armazenamentoStrategy) {
-        std::cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
+        cout << "[FACHADA] Nenhuma estrategia de armazenamento configurada.\n";
         return;
     }
 
-    std::vector<Usuario> usuarios;
-    std::vector<Conta> contas;
-    std::vector<Hidrometro> hidrometros;
+    vector<Usuario> usuarios;
+    vector<Conta> contas;
+    vector<Hidrometro> hidrometros;
 
     armazenamentoStrategy->carregar(usuarios, contas, hidrometros);
 
@@ -112,71 +124,72 @@ void Fachada::carregarSistema() {
 
 // TESTES
 void Fachada::testar() {
-    std::cout << "\nPRIMEIRO TESTE DA FACHADA\n" << std::endl;
+    cout << "\n- CENARIO 1: CADASTRO E CONSULTA\n" << endl;
 
     // 1. Criar usuários
-    std::cout << "[1] Criando usuarios..." << std::endl;
+    cout << "[1] Criando usuarios..." << endl;
     criarUsuario("12345678900", "Sophia Sales", "sophia@email.com");
     criarUsuario("98765432100", "Arley Pereira", "arley@email.com");
 
     // 2. Listar usuários
-    std::cout << "\n[2] Listando usuarios..." << std::endl;
+    cout << "\n[2] Listando usuarios..." << endl;
     auto usuarios = listarUsuarios();
-    std::cout << "[FACHADA] Total de usuarios: " << usuarios.size() << std::endl;
+    cout << "[FACHADA] Total de usuarios: " << usuarios.size() << endl;
 
     // 3. Criar contas
-    std::cout << "\n[3] Criando contas..." << std::endl;
+    cout << "\n[3] Criando contas..." << endl;
     criarConta("0001-001", "12345678900", "Rua A, 123");
     criarConta("0001-002", "12345678900", "Rua B, 456");
 
     // 4. Listar contas de um usuário
-    std::cout << "\n[4] Listando contas de Sophia..." << std::endl;
+    cout << "\n[4] Listando contas de Sophia..." << endl;
     auto contas = listarContasPorUsuario("12345678900");
-    std::cout << "[FACHADA] Contas do usuario: " << contas.size() << std::endl;
+    cout << "[FACHADA] Contas do usuario: " << contas.size() << endl;
 
     // 5. Criar hidrômetro
-    std::cout << "\n[5] Criando hidrometro..." << std::endl;
+    cout << "\n[5] Criando hidrometro..." << endl;
     criarHidrometro("H123456", "0001-001");
 
     // 6. Atualizar usuário
-    std::cout << "\n[6] Atualizando usuario..." << std::endl;
+    cout << "\n[6] Atualizando usuario..." << endl;
     atualizarUsuario("12345678900", "sophia.novo@email.com");
 
-    std::cout << "\nFIM DO PRIMEIRO TESTE\n" << std::endl;
+    cout << "\n[FIM DO CENARIO 1]\n" << endl;
 }
 
 double Fachada::processarImagemOCR(const std::string& caminhoImagem) {
-    std::cout << "[FACHADA] Processando imagem com OCR: " 
-              << caminhoImagem << std::endl;
+    cout << "[FACHADA] Iniciando leitura via OCR: " << caminhoImagem << endl;
     ProcessadorOCR processador(caminhoImagem);
     double valor = processador.processar();
-    std::cout << "[FACHADA] Valor obtido (OCR): " 
-              << valor << " m^3" << std::endl;
+
+    cout << "[PROCESSADOR] Processamento OCR concluido." << endl;
+    cout << "[FACHADA] Valor obtido (OCR): " << valor << " m^3" << endl;
+
     return valor;
 }
 
-double Fachada::processarImagemSegmentacao(const std::string& caminhoImagem) {
-    std::cout << "[FACHADA] Processando imagem com Segmentacao: " 
-              << caminhoImagem << std::endl;
+double Fachada::processarImagemSegmentacao(const string& caminhoImagem) {
+    cout << "[FACHADA] Iniciando leitura via Segmentacao: " << caminhoImagem << endl;
+    cout << "[PROCESSADOR] Processamento por segmentacao concluido." << endl;
+
     ProcessadorSegmentacao processador(caminhoImagem);
     double valor = processador.processar();
-    std::cout << "[FACHADA] Valor obtido (Segmentacao): " 
-              << valor << " m^3" << std::endl;
+    cout << "[FACHADA] Valor obtido (Segmentacao): " << valor << " m^3" << endl;
 
-    // Integração com hidrômetro e Observer (Semana 3)
+    // Integração com hidrômetro e Observer
     Hidrometro* hidrometro = usuarioService.obterHidrometro("H123456");
     if (hidrometro != nullptr) {
         hidrometro->setLeituraAtual(valor);
     }
 
-    // Verificação de limite de consumo (exemplo para CPF 12345678900)
+    // Verificação de limite de consumo (CPF 12345678900)
     double limite = usuarioService.obterLimiteConsumo("12345678900");
     if (limite > 0.0) {
         double consumoTotal = usuarioService.obterConsumoTotalUsuario("12345678900");
         if (consumoTotal > limite && notificadorAlertas) {
-            std::string msg = "LIMITE EXCEDIDO para usuario 12345678900: "
-                              + std::to_string(consumoTotal) + " m^3 (limite "
-                              + std::to_string(limite) + " m^3)";
+            string msg = "LIMITE EXCEDIDO para usuario 12345678900: "
+                              + to_string(consumoTotal) + " m^3 (limite "
+                              + to_string(limite) + " m^3)";
             notificadorAlertas->atualizar(msg);
         }
     }

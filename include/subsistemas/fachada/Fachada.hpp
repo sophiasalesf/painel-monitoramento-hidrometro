@@ -6,6 +6,7 @@
 #include "../monitoramento/ProcessadorSegmentacao.hpp"
 #include "../notificacoes/Notificador.hpp"
 #include "../armazenamento/ArmazenamentoStrategy.hpp"
+#include "../log/Logger.hpp"
 
 #include <string>
 #include <memory>
@@ -52,6 +53,7 @@ private:
     UsuarioService usuarioService;
     std::shared_ptr<Notificador> notificadorAlertas;
     std::shared_ptr<ArmazenamentoStrategy> armazenamentoStrategy;
+    Logger logger;
 };
 
 #endif

@@ -186,14 +186,13 @@ void UsuarioService::listarHistoricoHidrometro(const std::string& numeroHidromet
     }
 
     const auto& historico = h->getHistoricoLeituras();
-    std::cout << "[USUARIOSERVICE] Historico de leituras do hidrometro " 
-              << numeroHidrometro << ":\n";
+    std::cout << "[USUARIOSERVICE] Historico de leituras do hidrometro " << numeroHidrometro << ":\n";
     
     if (historico.empty()) {
         std::cout << "  (nenhuma leitura registrada ainda)\n";
     } else {
         for (size_t i = 0; i < historico.size(); ++i) {
-            std::cout << "  [" << (i+1) << "] " << historico[i] << " m^3\n";
+            std::cout << "  [" << (i+1) << "] " << historico[i] << " m^3\n" << std::endl;
         }
     }
 }
