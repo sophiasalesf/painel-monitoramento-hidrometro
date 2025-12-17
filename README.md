@@ -49,10 +49,6 @@ g++ -o main src/main.cpp src/subsistemas/fachada/*.cpp src/subsistemas/usuarios/
 2. Execute o programa:
 `.\main`
 
-
-## Exemplo de saída no terminal
-<img width="824" height="910" alt="image" src="https://github.com/user-attachments/assets/6d2b04d5-482a-4598-8f41-507c163ce2fe" />
-
 **Colaboradores:**
 - Simulador de Pedro (branch de Sophia) – AdapterSHA1
 - Simulador de Lígia (branch de Ayrton) – AdapterSHA2
