@@ -9,10 +9,16 @@ Usuario::Usuario()
     : cpf(""), nome(""), email(""), ativo(true), perfil("usuario"), dataCriacao("") 
 {}
 
-// Construtor com parâmetros
+// Construtor com 3 parâmetros (SEM senha)
 Usuario::Usuario(const std::string& cpf, const std::string& nome, const std::string& email)
-    : cpf(cpf), nome(nome), email(email), ativo(true), perfil("usuario") {
-    // Gerar timestamp (simplificado)
+    : cpf(cpf), nome(nome), email(email), ativo(true), perfil("usuario"), senha("") {
+    time_t agora = time(nullptr);
+    dataCriacao = std::to_string(agora);
+}
+
+// Construtor com 4 parâmetros (COM senha) ← ADICIONAR ESTE
+Usuario::Usuario(const std::string& cpf, const std::string& nome, const std::string& email, const std::string& senha)
+    : cpf(cpf), nome(nome), email(email), ativo(true), perfil("usuario"), senha(senha) {
     time_t agora = time(nullptr);
     dataCriacao = std::to_string(agora);
 }
@@ -46,6 +52,10 @@ std::vector<std::string> Usuario::getContas() const {
     return contas;
 }
 
+std::string Usuario::getSenha() const {
+    return senha;
+}
+
 // Setters
 void Usuario::setEmail(const std::string& novoEmail) {
     email = novoEmail;
@@ -57,6 +67,10 @@ void Usuario::setPerfil(const std::string& novoPerfil) {
 
 void Usuario::setAtivo(bool novoStatus) {
     ativo = novoStatus;
+}
+
+void Usuario::setSenha(const std::string& novaSenha) {
+    senha = novaSenha;
 }
 
 // Gerenciar contas

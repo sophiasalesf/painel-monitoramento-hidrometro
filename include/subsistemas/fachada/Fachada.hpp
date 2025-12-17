@@ -7,6 +7,7 @@
 #include "../notificacoes/Notificador.hpp"
 #include "../armazenamento/ArmazenamentoStrategy.hpp"
 #include "../log/Logger.hpp"
+#include "../adapters/ISHAAdapter.hpp"
 
 #include <string>
 #include <memory>
@@ -17,12 +18,16 @@ public:
     Fachada();
 
     // INTERFACE SIMPLIFICADA PARA USUÁRIOS
-    bool criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email);
+    bool criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email);  // ← MANTER
+    bool criarUsuario(const std::string& cpf, const std::string& nome, const std::string& email, const std::string& senha);  // ← ADICIONAR ESTA LINHA
     Usuario* obterUsuario(const std::string& cpf);
     bool atualizarUsuario(const std::string& cpf, const std::string& email);
     std::vector<Usuario> listarUsuarios();
 
-     // Limites de consumo
+    // Sistema de Login
+    Usuario* login(const std::string& cpf, const std::string& senha);  
+
+    // Limites de consumo
     void definirLimiteConsumoUsuario(const std::string& cpf, double limite);
     
     // INTERFACE SIMPLIFICADA PARA CONTAS 
@@ -36,10 +41,13 @@ public:
     std::vector<Hidrometro> listarHidrometrosPorConta(const std::string& numeroConta);
     void listarHistoricoHidrometro(const std::string& numeroHidrometro);
 
-
     // INTERFACE SIMPLIFICADA PARA MONITORAMENTO DE IMAGENS
-    double processarImagemOCR(const std::string& caminhoImagem);
-    double processarImagemSegmentacao(const std::string& caminhoImagem);
+    double processarImagemOCR(const std::string& caminhoImagem, const std::string& numeroHidrometro);
+    double processarImagemSegmentacao(const std::string& caminhoImagem, const std::string& numeroHidrometro);
+
+    // INTERFACE PARA INTEGRAÇÃO COM SHA VIA ADAPTER
+    void configurarAdapterSHA(std::shared_ptr<ISHAAdapter> adapter);
+    double processarImagemDeSHA(const std::string& numeroHidrometro);
 
     // INTERFACE SIMPLIFICADA PARA ARMAZENAMENTO
     void configurarArmazenamento(std::shared_ptr<ArmazenamentoStrategy> strategy);
@@ -54,6 +62,7 @@ private:
     std::shared_ptr<Notificador> notificadorAlertas;
     std::shared_ptr<ArmazenamentoStrategy> armazenamentoStrategy;
     Logger logger;
+    std::shared_ptr<ISHAAdapter> adapterSHA;
 };
 
 #endif

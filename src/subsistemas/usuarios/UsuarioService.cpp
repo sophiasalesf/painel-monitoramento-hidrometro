@@ -132,8 +132,8 @@ bool UsuarioService::deletarConta(const std::string& numeroConta) {
     std::cerr << "[USUARIOSERVICE] Conta " << numeroConta << " nao encontrada!" << std::endl;
     return false;
 }
-// CRUD HIDRÔMETROS 
 
+// CRUD HIDRÔMETROS 
 bool UsuarioService::criarHidrometro(const std::string& numeroHidrometro, const std::string& numeroConta) {
     if (!contaExiste(numeroConta)) {
         std::cerr << "[USUARIOSERVICE] Erro: Conta " << numeroConta << " nao encontrada!" << std::endl;
@@ -146,6 +146,7 @@ bool UsuarioService::criarHidrometro(const std::string& numeroHidrometro, const 
     }
 
     Hidrometro novoHidrometro(numeroHidrometro, 0.0);
+    novoHidrometro.setNumeroConta(numeroConta);
     hidrometros[numeroHidrometro] = novoHidrometro;
     std::cout << "[USUARIOSERVICE] Hidrometro criado: Hidrometro(" << numeroHidrometro << ", Leitura: 0 m3)" << std::endl;
     return true;
@@ -160,10 +161,12 @@ Hidrometro* UsuarioService::obterHidrometro(const std::string& numeroHidrometro)
     return nullptr;
 }
 
-std::vector<Hidrometro> UsuarioService::listarHidrometrosPorConta(const std::string& /*numeroConta*/) {
+std::vector<Hidrometro> UsuarioService::listarHidrometrosPorConta(const std::string& numeroConta) {
     std::vector<Hidrometro> lista;
     for (auto& par : hidrometros) {
-        lista.push_back(par.second);
+        if (par.second.getNumeroConta() == numeroConta) {
+            lista.push_back(par.second);
+        }
     }
     return lista;
 }
@@ -182,7 +185,7 @@ bool UsuarioService::deletarHidrometro(const std::string& numeroHidrometro) {
 void UsuarioService::listarHistoricoHidrometro(const std::string& numeroHidrometro) {
     Hidrometro* h = obterHidrometro(numeroHidrometro);
     if (h == nullptr) {
-        return; // mensagem de erro já foi exibida por obterHidrometro
+        return; 
     }
 
     const auto& historico = h->getHistoricoLeituras();
@@ -206,14 +209,24 @@ void UsuarioService::recarregarDados(
     contas.clear();
     hidrometros.clear();
 
+    // Carregar usuários
     for (const auto& u : novosUsuarios) {
         usuarios[u.getCpf()] = u;
     }
 
+    // Carregar contas E vincular aos usuários
     for (const auto& c : novasContas) {
         contas[c.getNumeroConta()] = c;
+        
+        // Vincular conta ao usuário
+        std::string cpfTitular = c.getCpfTitular();
+        auto it = usuarios.find(cpfTitular);
+        if (it != usuarios.end()) {
+            it->second.adicionarConta(c.getNumeroConta());
+        }
     }
 
+    // Carregar hidrômetros
     for (const auto& h : novosHidrometros) {
         hidrometros[h.getNumero()] = h;
     }

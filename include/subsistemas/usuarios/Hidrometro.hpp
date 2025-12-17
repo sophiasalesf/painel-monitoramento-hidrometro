@@ -11,16 +11,21 @@ public:
     Hidrometro();
     Hidrometro(const std::string& numero, double leituraInicial);
 
+    // getters
     std::string getNumero() const;
     double getLeituraAtual() const;
-    void setLeituraAtual(double novaLeitura);
-    
+    std::string getNumeroConta() const;
     const std::vector<double>& getHistoricoLeituras() const;
+
+    // setters
+    void setLeituraAtual(double novaLeitura);
+    void setNumeroConta(const std::string& conta);
 
 private:
     std::string numero;
     double leituraAtual;
     std::vector<double> historicoLeituras;
+    std::string numeroConta;
 };
 
 #endif

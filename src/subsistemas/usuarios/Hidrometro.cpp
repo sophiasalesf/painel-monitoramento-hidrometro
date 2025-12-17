@@ -3,7 +3,7 @@
 Hidrometro::Hidrometro() : numero(""), leituraAtual(0.0) {}
 
 Hidrometro::Hidrometro(const std::string& numero, double leituraInicial)
-    : numero(numero), leituraAtual(leituraInicial) {}
+    : numero(numero), leituraAtual(leituraInicial), numeroConta("") {}
 
 std::string Hidrometro::getNumero() const {
     return numero;
@@ -26,4 +26,12 @@ void Hidrometro::setLeituraAtual(double novaLeitura) {
     // Notifica observadores sobre a mudança
     std::string msg = "Hidrometro " + numero + " atualizado para " + std::to_string(leituraAtual) + " m^3";
     notificarObservadores(msg);
+}
+
+std::string Hidrometro::getNumeroConta() const {
+    return numeroConta;
+}
+
+void Hidrometro::setNumeroConta(const std::string& conta) {
+    numeroConta = conta;
 }

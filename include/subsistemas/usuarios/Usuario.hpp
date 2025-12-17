@@ -11,7 +11,8 @@ public:
     // Construtores
     Usuario();
     Usuario(const std::string& cpf, const std::string& nome, const std::string& email);
-
+    Usuario(const std::string& cpf, const std::string& nome, const std::string& email, const std::string& senha);
+    
     // Getters
     std::string getCpf() const;
     std::string getNome() const;
@@ -20,11 +21,13 @@ public:
     bool getAtivo() const;
     std::string getDataCriacao() const;
     std::vector<std::string> getContas() const;
+    std::string getSenha() const;
 
     // Setters
     void setEmail(const std::string& novoEmail);
     void setPerfil(const std::string& novoPerfil);
     void setAtivo(bool novoStatus);
+    void setSenha(const std::string& novaSenha);
 
     // Gerenciar contas
     void adicionarConta(const std::string& numeroConta);
@@ -41,6 +44,7 @@ private:
     std::string dataCriacao;
     std::vector<std::string> contas;
     bool ativo;
+    std::string senha;
 };
 
 #endif
